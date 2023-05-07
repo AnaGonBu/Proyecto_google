@@ -560,10 +560,76 @@ df.head(2)</code></pre>
 y = df[&#39;charges&#39;]</code></pre>
 <pre class="python"><code>from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42)</code></pre>
-<pre class="python"><code>#from lazypredict.Supervised import LazyRegressor
-#clf = LazyRegressor(verbose=0)
-#models,predictions = clf.fit(x_train, x_test, y_train, y_test)
-#models</code></pre>
+<pre class="python"><code>from lazypredict.Supervised import LazyRegressor
+clf = LazyRegressor(verbose=0)
+models,predictions = clf.fit(x_train, x_test, y_train, y_test)</code></pre>
+<pre><code>## 
+  0%|          | 0/42 [00:00&lt;?, ?it/s]
+  5%|4         | 2/42 [00:00&lt;00:02, 17.31it/s]
+ 14%|#4        | 6/42 [00:00&lt;00:01, 22.24it/s]
+ 21%|##1       | 9/42 [00:00&lt;00:02, 14.60it/s]
+ 26%|##6       | 11/42 [00:02&lt;00:11,  2.74it/s]
+ 31%|###       | 13/42 [00:03&lt;00:09,  3.13it/s]
+ 38%|###8      | 16/42 [00:03&lt;00:06,  3.85it/s]
+ 40%|####      | 17/42 [00:03&lt;00:06,  4.01it/s]
+ 50%|#####     | 21/42 [00:03&lt;00:03,  6.96it/s]
+ 60%|#####9    | 25/42 [00:04&lt;00:01, 10.27it/s]
+ 60%|#####9    | 25/42 [00:20&lt;00:01, 10.27it/s]
+ 62%|######1   | 26/42 [00:25&lt;00:44,  2.79s/it]
+ 64%|######4   | 27/42 [00:25&lt;00:35,  2.38s/it]
+ 64%|######4   | 27/42 [00:40&lt;00:35,  2.38s/it]
+ 76%|#######6  | 32/42 [01:31&lt;01:20,  8.01s/it]
+ 79%|#######8  | 33/42 [01:31&lt;01:02,  6.99s/it]
+ 83%|########3 | 35/42 [01:32&lt;00:36,  5.14s/it]
+ 95%|#########5| 40/42 [01:32&lt;00:05,  2.63s/it]
+100%|##########| 42/42 [01:38&lt;00:00,  2.36s/it]</code></pre>
+<pre class="python"><code>models</code></pre>
+<pre><code>##                                Adjusted R-Squared  ...  Time Taken
+## Model                                              ...            
+## GradientBoostingRegressor                    0.90  ...        0.17
+## HistGradientBoostingRegressor                0.89  ...        0.25
+## LGBMRegressor                                0.88  ...        5.16
+## BaggingRegressor                             0.88  ...        0.04
+## RandomForestRegressor                        0.88  ...        0.28
+## XGBRegressor                                 0.87  ...        1.59
+## KNeighborsRegressor                          0.86  ...        0.03
+## ExtraTreesRegressor                          0.85  ...        0.23
+## PoissonRegressor                             0.83  ...        0.01
+## AdaBoostRegressor                            0.83  ...        0.07
+## Lars                                         0.80  ...        0.19
+## TransformedTargetRegressor                   0.80  ...        0.01
+## LinearRegression                             0.80  ...        0.01
+## Lasso                                        0.80  ...        0.02
+## LassoLars                                    0.80  ...        0.01
+## Ridge                                        0.80  ...        0.01
+## RidgeCV                                      0.80  ...        0.01
+## SGDRegressor                                 0.80  ...        0.01
+## BayesianRidge                                0.80  ...        0.06
+## LassoLarsIC                                  0.80  ...        0.07
+## LarsCV                                       0.80  ...        0.02
+## LassoLarsCV                                  0.80  ...        0.02
+## LassoCV                                      0.80  ...        0.05
+## OrthogonalMatchingPursuitCV                  0.80  ...        0.01
+## HuberRegressor                               0.78  ...        0.04
+## PassiveAggressiveRegressor                   0.77  ...        0.04
+## ExtraTreeRegressor                           0.77  ...        0.01
+## DecisionTreeRegressor                        0.77  ...        0.01
+## OrthogonalMatchingPursuit                    0.67  ...        0.01
+## ElasticNet                                   0.66  ...        0.08
+## RANSACRegressor                              0.55  ...        0.14
+## TweedieRegressor                             0.54  ...        0.02
+## GammaRegressor                               0.50  ...        0.08
+## ElasticNetCV                                 0.11  ...        0.06
+## DummyRegressor                              -0.03  ...        0.01
+## NuSVR                                       -0.09  ...        0.14
+## SVR                                         -0.16  ...        0.06
+## QuantileRegressor                           -0.16  ...       65.88
+## KernelRidge                                 -0.20  ...        0.43
+## LinearSVR                                   -0.99  ...        0.02
+## MLPRegressor                                -1.05  ...       21.47
+## GaussianProcessRegressor                 -2695.41  ...        2.06
+## 
+## [42 rows x 4 columns]</code></pre>
 </div>
 <div id="the-result-of-lazypredict-can-be-viewed-in-notebook-positcloud-does-not-allow-the-import-of-the-code-with-that-tool." class="section level2">
 <h2>The result of lazypredict can be viewed in Notebook, positcloud does
@@ -601,11 +667,11 @@ print(&quot;Model Accuracy: %.3f&quot; % gbr.score(x_test_std, y_test))
 #
 # Create the mean squared error
 #</code></pre>
-<pre><code>## Model Accuracy: 0.818</code></pre>
+<pre><code>## Model Accuracy: 0.802</code></pre>
 <pre class="python"><code>mse = mean_squared_error(y_test, gbr.predict(x_test_std))
 print(&quot;The mean squared error (MSE) on test set: {:.4f}&quot;.format(mse))
 #</code></pre>
-<pre><code>## The mean squared error (MSE) on test set: 33375745.1016</code></pre>
+<pre><code>## The mean squared error (MSE) on test set: 36312333.8104</code></pre>
 </div>
 <div id="best-metrics-are-given-by-gradientboostingregressor-our-response-variable-does-not-have-a-normal-distribution-nor-is-the-relationship-with-the-response-variables-entirely-linear.-we-could-fit-the-model-with-interval-prediction." class="section level2">
 <h2>Best metrics are given by GradientBoostingRegressor, our response
