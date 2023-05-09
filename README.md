@@ -7,7 +7,7 @@ ACME Insurance Inc. provides affordable health insurance to thousands of custome
 Analysis of available data looking for possible trend lines to estimate the annual medical expenditure of new and existing customers, establishing the reduced annual premium price as the main attraction, while the company promotes healthy habits among its customers by reducing the risk of unpredictable extra expenses.
 
 ## Method:
--Data analysis and visualisations: Python and R
+-Data analysis and visualisations: Python and R 
 -Model: Estimating annual medical expenditure using available information (Python, lazypredict, skalear)
 
 ## Conclusions:
