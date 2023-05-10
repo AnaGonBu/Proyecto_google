@@ -1,0 +1,250 @@
+---
+title: "Untitled"
+author: "Ana"
+date: "2023-05-07"
+output:
+  html_document: default
+  pdf_document: default
+---
+USE
+
+ACME Insurance Inc. offers affordable health insurance to thousands of customer all over the United States. You're tasked with creating an automated system to estimate the annual medical expenditure for new customers, using information such as their age, sex, BMI, children, smoking habits and region of residence.
+
+``` {r}
+install.packages("ggplot2")
+```
+``` {r}
+library(ggplot2)
+install.packages("tidyverse")
+```
+```{r}
+library(tidyverse)
+```
+## Exploring data
+
+``` {r}
+library(readr)
+#dataset <- read_csv('00-insurance.csv')
+dataset <- read_csv('00-insurance.csv', col_types = cols(
+  sex = col_character(),
+  smoker = col_character(),
+  region = col_character(),
+  age = col_double(),
+  bmi = col_double(),
+  children = col_double(),
+  charges = col_double()
+))
+
+```
+
+
+
+``` {r}
+head(dataset)
+```
+``` {r}
+str(dataset)
+```
+``` {r}
+glimpse(dataset)
+```
+``` {r}
+nulo<-is.na(dataset)
+sum(nulo)
+```
+``` {r}
+summary(dataset)
+```
+``` {r}
+duplicates<-duplicated(dataset)
+sum(duplicates)#number of duplicates
+```
+``` {r}
+filter(dataset,duplicates)
+```
+``` {r}
+install.packages("dplyr")
+```
+
+``` {r}
+library(dplyr)
+df<- distinct(dataset)#new data without duplicates
+sum(duplicated(df))#unique values?
+```
+``` {r}
+theme_set(theme_gray())
+theme_update(plot.title = element_text(hjust = 0.5))
+
+ggplot(df, aes(x = charges)) +
+geom_histogram(bins =50,fill = "blue", alpha = 0.5) +
+labs(title = "Distribution of Charges")
+```
+``` {r}
+theme_set(theme_gray())
+theme_update(plot.title = element_text(hjust = 0.5))
+
+ggplot(df, aes(x = age)) +
+geom_histogram(bins=50,fill = "purple", alpha = 0.5) +
+labs(title = "Distribution of Age")
+```
+``` {r}
+theme_set(theme_gray())
+theme_update(plot.title = element_text(hjust = 0.5))
+
+ggplot(df, aes(x = bmi)) +
+geom_histogram(bins=50,fill = "purple",alpha=0.5) +
+labs(title = "Distribution of BMI")
+```
+
+``` {r}
+theme_set(theme_gray())
+theme_update(plot.title = element_text(hjust = 0.5))
+
+ggplot(df, aes(x = children)) +
+geom_histogram(bins= 50, fill = "purple",alpha=0.5) +
+labs(title = "Distribution of Children")
+```
+``` {r}
+ggplot(df, aes(x=sex, y=charges, fill=sex)) + 
+  geom_violin(trim=FALSE) +
+  geom_boxplot(width=0.1, fill="white", color="black", outlier.shape = NA) +
+  labs(title="Distribution of charges by sex ",
+       )
+```
+``` {r}
+ggplot(df, aes(x=sex, y=charges, fill=smoker)) + 
+  geom_violin(trim=FALSE) +
+  geom_boxplot(width=0.1, fill="white", color="black", outlier.shape = NA) +
+  labs(title="Distribution of charges by sex and smoker status",
+       x="Sex",
+       y="Charges",
+       fill="Smoker")
+```
+``` {r}
+ggplot(df, aes(x=region, y=charges, fill=region)) + 
+  geom_violin(trim=FALSE) +
+  geom_boxplot(width=0.1, fill="white", color="black", outlier.shape = NA) +
+  labs(title="Distribution of charges by region",
+       x="Region",
+       y="Charges",
+       fill="Region")
+```
+
+``` {r}
+ggplot(df, aes(x=region, y=charges, fill=smoker)) + 
+  geom_violin(trim=FALSE) +
+  geom_boxplot(width=0.1, fill="white", color="black", outlier.shape = NA) +
+  labs(title="Distribution of charges by region and smoker status",
+       x="Region",
+       y="Charges",
+       fill="Smoker")
+```
+
+``` {r}
+ggplot(df, aes(x=smoker, y=charges, fill=smoker)) + 
+  geom_violin(trim=FALSE) +
+  geom_boxplot(width=0.1, fill="white", color="black", outlier.shape = NA) +
+  labs(title="Distribution of charges by smoker status",
+       x="Smoker",
+       y="Charges")
+```
+
+``` {r}
+ggplot(data = dataset, aes(x = age, y = charges, color = smoker)) +
+  geom_point()
+```
+``` {r}
+ggplot(data = dataset, aes(x = bmi, y = charges, color = smoker)) +
+  geom_point()
+```
+## Our model
+
+
+```{python}
+
+import lazypredict
+import pandas as pd
+import numpy as np
+from lazypredict.Supervised import LazyRegressor
+```
+```{python}
+df = pd.read_csv("00-insurance.csv", index_col = 0).reset_index()
+df.drop_duplicates(inplace=True)
+df.head(2)
+```
+```{python}
+df['sex'] = df['sex'].map({'female':0,'male':1})
+df['smoker'] = df['smoker'].map({'no':0,'yes':1})
+df['region'] = df['region'].map({'northeast':1,'northwest':2,'southeast':3,'southwest':4})
+df.head(2)
+```
+```{python}
+X = df.drop('charges',axis=1)
+y = df['charges']
+```
+
+```{python}
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42)
+```
+
+```{python}
+from lazypredict.Supervised import LazyRegressor
+clf = LazyRegressor(verbose=0)
+models,predictions = clf.fit(x_train, x_test, y_train, y_test)
+models
+```
+
+
+
+```{python}
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
+# Standardize the dataset
+sc = StandardScaler()
+x_train_std = sc.fit_transform(x_train)
+x_test_std = sc.transform(x_test)
+
+# Hyperparameters for GradientBoostingRegressor
+#
+gbr_params = {'n_estimators': 1000,
+          'max_depth': 3,
+          'min_samples_split': 5,
+          'learning_rate': 0.01,
+          'loss': 'absolute_error'}
+```
+```{python}
+# Create an instance of gradient boosting regressor
+#
+gbr = GradientBoostingRegressor(**gbr_params)
+#
+# Fit the model
+#
+gbr.fit(x_train_std, y_train)
+```
+
+```{python}
+# Print Coefficient of determination R^2
+#
+print("Model Accuracy: %.3f" % gbr.score(x_test_std, y_test))
+#
+# Create the mean squared error
+#
+mse = mean_squared_error(y_test, gbr.predict(x_test_std))
+print("The mean squared error (MSE) on test set: {:.4f}".format(mse))
+#
+
+```
+## Best metrics are given by GradientBoostingRegressor, our response variable does not have a normal distribution, nor is the relationship with the response variables entirely linear. We could fit the model with interval prediction.
+
+
+
+
+
+
+
+
+
