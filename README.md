@@ -1,5 +1,11 @@
-# Proyecto_google
+# Proyecto_google (Medical Insurance)
 
+#### Dataset: [Medical Cost Personal Dataset – Kaggle](https://www.kaggle.com/datasets/mirichoi0218/insurance)
+#### Herramientas utilizadas:
+- Tableau  [Presentación](https://public.tableau.com/app/profile/ana1951/viz/OngoingGoogle2/Google)
+- SQL para consultas previas  
+- Python/R, Seaborn, Skalern
+   
 ## Target:
 ACME Insurance Inc. provides affordable health insurance to thousands of customers across the United States. They want to launch an attractive customer acquisition campaign. Your task is to study the data provided by the company, such as age, gender, BMI, children, smoking habits and region of residence of current customers and propose possible strategies.
 
@@ -8,7 +14,7 @@ Analysis of available data looking for possible trend lines to estimate the annu
 
 ## Method:
 -Data analysis and visualisations: Python and R  
--Model: Estimating annual medical expenditure using available information (Python, lazypredict, skalear)
+-Model: Estimating annual medical expenditure using available information (Python, lazypredict, skalearn)
 
 ## Conclusions:
 Our data includes mostly overweight, middle-aged clients with healthy smoking habits and no children.
